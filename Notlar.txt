@@ -1,0 +1,76 @@
+Input.GetButton basılı tutuncada kabul ediyo
+Input.GetButtonDown ilk basınca sadece
+
+using UnityEngine --> unity özellikleri için
+
+public class {blabla} :MonoBehaviour --> MonoBehaviour bir classmış işte start update gibi metotlar (fonksiyonlar) bundaymış sanırım çok önemliymiş
+
+Rigidbody2D rgb --> rgb değişkeni oluşturduk
+
+Vector3 velocity --> velocity değişkeni oluşturduk
+
+//Yukarıdaki 2 işlem aslında şu işleme çok benziyor
+{
+    int sayi;
+    Rigidbody2D rgb;
+}
+
+
+
+yani bu türden bir değişken oluşturuyoruz aslında.
+
+float speedAmount = 5f --> yani burda tek demek istediğim "f" float olduğunu belirtmek içinmiş o kadar.
+
+void Start() --> oyun başında birkez çalıştırılan bir fonksiyondur
+
+rgb = GetComponent<Rigidbody2D>() --> üzerinde çalıştığımız karakterin Rigidbody2D gibi bir bileşenine erişmemizi sağlar, bunu yapmazsak Rigidbody2D işlemleri yapamayız.
+
+void Update() --> oyunun her frame inde yani her oyun döngüsünde çalıştırılan fonksiyonumuz.
+
+velocity = new Vector3(Input.GetAxis("Horizontal"), 0f, 0f)
+{
+    ***"new" C# dilinde nesne oluşturma işlemiymiş.
+    ***Nesnelerinde aynı değişkenler gibi türleri vardır.
+    OKU: şimdi velocity yukarıdaki kodlarımızda sadece "Vector3" türünden bir değişken idi.Biz, "new Vector3(...)" yazarak ona bir nesne tutturmuş olduk.
+    Bu parantezin içinede (x,y,z) gibi "Vector3" sınıfının değişkenlerini girdik."velocity = new Vector3(...)" yazarak sadece bir değişken olan "velocity" ye "Vector3" türünden bir nesne tutturduk.
+    //Analog değer --> yavaş yavaş artan/azalan değer demek. Dijital değer --> pat pat diye değişir mesela bu örneklerde direk 1 veya -1 olur.
+    Input.GetAxis("Horizontal") --> Input girişleri alır klavye joystick vb. || GetAxis fonksiyonu belirli bir eksendeki kullanıcı girişlerini analog bir değere döndürür.
+    --> "Horizontal" parametresi yata eksendeki girişler içindir.
+}
+
+
+transform.position += velocity * speedAmount * Time.deltaTime
+{
+    transform; Unity'de nesnelerin rotasyonunu, ölçeğini, pozisyonunu içeren bir bileşiktir.
+    position; bu nesnenin dünya üzerindeki konumunu temsil eder.
+    //Yani mesela karakterin konumu 0 0 0 dan 0 0 1 yapılmak isteniyor bu "transform.position" ile yapılabilir.
+    "Time.deltaTime" --> 120 fps ile 30 fps alan oyuncunun aynı hıza sahip olmasını sağlar kullanmaz isek fps farkları bu hızı değiştirebilir çünkü bu fonksiyon hızı zamana bağlı kılar aksi halde saniyede oluşan görüntülere (frame) lere bağlı olur.
+}
+
+
+
+if (Input.GetButtonDown("Jump") && Mathf.Approximately(rgb.linearVelocity.y, 0))
+{
+    Fonksiyon	        |Ne Zaman true Döner?	        |Ne İşe Yarar?
+
+
+    
+GetButtonDown("Jump")	|Butona ilk basıldığı anda	    |Tek seferlik işlem (zıplama başlatma gibi)
+
+GetButton("Jump")	    |Buton basılı tutulduğu sürece	|Sürekli çalışması gereken şeyler için
+
+GetButtonUp("Jump")	    |Buton bırakıldığı anda	        |Basılı tutmayı bırakınca bir şey yapmak için
+
+
+Mathf.Approximately(rgb.linearVelocity.y, 0) --> karakterin sonsuz kez zıplamaması için yerle temas halinde olup olmadığını kontrol ediyor.
+--> rgb Rigidbody2D türünden bir değişken ve bir değişken olmanın ötesinde bir Rigidbody2D temsilcisi bu yüzden biz Rigidbody2D sınıfından bir fonksiyon veya bir özellik kullanmak istediğimizde başına "rgb." yazmamız gerekir.
+rgb.linearVelocity.y --> karakterimizin y yönündeki hızını temsil ediyor.
+Mathf.Approximately --> bu fonksiyonda içine girilen iki degerin/değişkenin birbirine çok yakın olduğu durumu inceler küçük farkları göz ardı eder.
+}
+
+rgb.AddForce(Vector3.up * jumpAmount, ForceMode2D.Impulse)
+{
+    Vector3.up sabit bir vektördür bu şunu tunu temsil eder (0 1 0) [yukarı yön]
+    jumpAmount ile çarparakta bu değeri istediğimiz gibi ayarlayabiliyoruz 1 veya -1 den farklı yapabiliyoruz yani.
+    ForceMode2D.Impulse --> karaktere anlık bir kuvvet uygulamamıza yarıyor.
+}
